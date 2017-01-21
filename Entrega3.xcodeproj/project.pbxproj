@@ -13,6 +13,8 @@
 		4F6836251E3222F000F7DB5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F6836231E3222F000F7DB5F /* Main.storyboard */; };
 		4F6836271E3222F000F7DB5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F6836261E3222F000F7DB5F /* Assets.xcassets */; };
 		4F68362A1E3222F000F7DB5F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F6836281E3222F000F7DB5F /* LaunchScreen.storyboard */; };
+		4F6836331E322AF400F7DB5F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F6836321E322AF400F7DB5F /* MapKit.framework */; };
+		4F6836361E322DD800F7DB5F /* Monumento.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6836351E322DD800F7DB5F /* Monumento.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,9 @@
 		4F6836261E3222F000F7DB5F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F6836291E3222F000F7DB5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4F68362B1E3222F000F7DB5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4F6836321E322AF400F7DB5F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		4F6836341E322DD800F7DB5F /* Monumento.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Monumento.h; sourceTree = "<group>"; };
+		4F6836351E322DD800F7DB5F /* Monumento.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Monumento.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F6836331E322AF400F7DB5F /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +50,7 @@
 			children = (
 				4F6836191E3222F000F7DB5F /* Entrega3 */,
 				4F6836181E3222F000F7DB5F /* Products */,
+				4F6836311E322AF400F7DB5F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +69,8 @@
 				4F68361E1E3222F000F7DB5F /* AppDelegate.m */,
 				4F6836201E3222F000F7DB5F /* ViewController.h */,
 				4F6836211E3222F000F7DB5F /* ViewController.m */,
+				4F6836341E322DD800F7DB5F /* Monumento.h */,
+				4F6836351E322DD800F7DB5F /* Monumento.m */,
 				4F6836231E3222F000F7DB5F /* Main.storyboard */,
 				4F6836261E3222F000F7DB5F /* Assets.xcassets */,
 				4F6836281E3222F000F7DB5F /* LaunchScreen.storyboard */,
@@ -77,6 +86,14 @@
 				4F68361B1E3222F000F7DB5F /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4F6836311E322AF400F7DB5F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4F6836321E322AF400F7DB5F /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F6836361E322DD800F7DB5F /* Monumento.m in Sources */,
 				4F6836221E3222F000F7DB5F /* ViewController.m in Sources */,
 				4F68361F1E3222F000F7DB5F /* AppDelegate.m in Sources */,
 				4F68361C1E3222F000F7DB5F /* main.m in Sources */,
