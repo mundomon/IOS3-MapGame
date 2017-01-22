@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "SoundManager.h"
 
 @interface ViewController ()
 
@@ -44,6 +45,7 @@
     _lblDistancia.textColor=[UIColor redColor];
     _lblResult.text=@"SELECCIONE UN PUNTO SOBRE EL MAPA";
     touchSelected=NO;
+    finPartida=NO;
  
     //configuro mundo
     [_mapMundo setDelegate:self];
@@ -66,24 +68,26 @@
 }
 
 -(void)selectRandomMonumento{
-    NSInteger posicionAzar=arc4random()%monumentos.count;
-    monumento=[monumentos objectAtIndex:posicionAzar];
-    [monumentos removeObjectAtIndex:posicionAzar];
+    NSLog(@"Monumentos: %d",(int)monumentos.count);
+    if(monumentos.count!=0){
+        NSInteger posicionAzar=arc4random()%monumentos.count;
+        monumento=[monumentos objectAtIndex:posicionAzar];
+        [monumentos removeObjectAtIndex:posicionAzar];
+    }
+    else{
+        finPartida=YES;
+    }
     [self mostrarMonumento];
 
 }
 
 -(void) mostrarMonumento{
-
-    //TODO reiniciar cuando acaben los monumenots
-    if((int)monumentos.count==0){
-        NSLog(@"Monumentos restantes: %d",(int)monumentos.count);
-        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"FIN DE LA PARTIDA" message:@"Volver a Jugar?" delegate:self cancelButtonTitle:@"SI" otherButtonTitles:@"NO", nil];
-        [alert show];
-    }else{
-        NSLog(@"Monumentos restantes: %d",(int)monumentos.count);
+    //TODO reiniciar cuando acaben los monumentos
+    if(!finPartida){
         CLLocationCoordinate2D monumentLocation = CLLocationCoordinate2DMake(monumento.lat, monumento.lng);
         MKMapCamera *camera = [MKMapCamera cameraLookingAtCenterCoordinate:monumentLocation fromDistance:monumento.distancia pitch:monumento.pitch heading:monumento.heading];
+        
+        OKPressed=NO;
         
         //PREPARO Y DIBUJO MONUMENTO
         [self setRegion:monumentLocation distancia:monumento.distancia enMapa:_mapMonumento];
@@ -99,6 +103,12 @@
         [self.mapSup addSubview: _mapMonumento];
         
         [self setRegion:CLLocationCoordinate2DMake(40,0) distancia:3500000 enMapa:_mapMundo];
+        
+        _lblResult.text=@"SELECCIONE UN PUNTO SOBRE EL MAPA";
+ 
+    }else{
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"FIN DE LA PARTIDA" message:@"Volver a Jugar?" delegate:self cancelButtonTitle:@"SI" otherButtonTitles:@"NO", nil];
+        [alert show];
     }
 }
 
@@ -113,17 +123,33 @@
     CLLocation *clLocationTouch=[[CLLocation alloc] initWithLatitude:_coordenadaTouch.latitude longitude:_coordenadaTouch.longitude];
     CLLocationCoordinate2D monumentLocation = CLLocationCoordinate2DMake(monumento.lat, monumento.lng);
     
+    
     if(touchSelected){
         [self.mapInf removeGestureRecognizer:longPress];
         touchSelected=NO;
+        OKPressed=YES;
         
         //llamar funcion distancia
         int distanciaError=[self distancia:clLocationTouch hasta:clLocationMonumento];
         [self setRegion:monumentLocation distancia:3500000 enMapa:_mapMundo];
+        if(distanciaError<300){
+            [[SoundManager sharedManager] prepareToPlayWithSound:@"applause-moderate-03.wav"];
+            [[SoundManager sharedManager] playSound:@"applause-moderate-03.wav"];
+        }
+        else if(distanciaError>=300 && distanciaError<1000){
+            [[SoundManager sharedManager] prepareToPlayWithSound:@"applause-light-02.wav"];
+            [[SoundManager sharedManager] playSound:@"applause-light-02.wav"];
+        }
+        else{
+            [[SoundManager sharedManager] prepareToPlayWithSound:@"boo-01.wav"];
+            [[SoundManager sharedManager] playSound:@"boo-01.wav"];
+            
+        }
         
         //llamada a mostrarAnotacion
         NSString *ciudadDistancia=[NSString stringWithFormat:@"%@ (%dKm)",monumento.ciudad,distanciaError];
         [self mostrarAnotacion:monumentLocation title:monumento.nombre subtitle:ciudadDistancia];
+        
         //muestro datos en label
         NSString *textResult=[NSString stringWithFormat:@"%@ \n %@",monumento.nombre,ciudadDistancia];
         [_lblResult setText:textResult];
@@ -134,9 +160,13 @@
 }
 
 -(IBAction)siguienteMonumento:(id)sender{
-    [self borrarAnotaciones];
-    [self selectRandomMonumento];
-    [self.mapInf addGestureRecognizer:longPress];
+    
+        [self borrarAnotaciones];
+        if(OKPressed==NO){
+            [monumentos addObject:monumento];
+        }
+        [self selectRandomMonumento];
+        [self.mapInf addGestureRecognizer:longPress];
 }
 
 -(int)distancia:(CLLocation*)desde hasta:(CLLocation*)hasta{
@@ -149,8 +179,8 @@
 
 -(void)dibujarLineaDesde:(CLLocationCoordinate2D)desde hasta:(CLLocationCoordinate2D)hasta{
     CLLocationCoordinate2D points[2];
-    points[0]=desde;
-    points[1]=hasta;
+    points[1]=desde;
+    points[0]=hasta;
     
     MKPolyline *overlayPolyline=[MKPolyline polylineWithCoordinates:points count:2];
     [_mapMundo addOverlay:overlayPolyline];
@@ -215,7 +245,7 @@
     monumento2.distancia = 200;
     monumento2.pitch = 25;
     monumento2.heading = 230;
-    
+  /*
     Monumento *monumento3 = [[Monumento alloc] init];
     monumento3.nombre = @"Empire State";
     monumento3.ciudad = @"NEW YORK";
@@ -331,9 +361,9 @@
     monumento15.lng = -58.3724665;
     monumento15.distancia = 500;
     monumento15.pitch = 45;
-    monumento15.heading = 75;
+    monumento15.heading = 75;*/
     
-    monumentos = [NSMutableArray arrayWithObjects:monumento1, monumento2, monumento3, monumento4, monumento5, monumento6, monumento7, monumento8, monumento9, monumento10, monumento11, monumento12, monumento13, monumento14, monumento15, nil];
+    monumentos = [NSMutableArray arrayWithObjects:monumento1, monumento2, /*monumento3, monumento4, monumento5, monumento6, monumento7, monumento8, monumento9, monumento10, monumento11, monumento12, monumento13, monumento14, monumento15,*/ nil];
 }
 
 @end

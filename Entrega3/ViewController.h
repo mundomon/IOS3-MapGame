@@ -17,21 +17,23 @@
     CGFloat distanciaAcumulada;
     UILongPressGestureRecognizer *longPress;
     BOOL touchSelected;
+    BOOL OKPressed;
+    BOOL finPartida;
 }
 
 @property(readwrite,nonatomic) CLLocationCoordinate2D coordenadaTouch;
 
-
 @property (strong, nonatomic) IBOutlet UIView *mapSup;
 @property (strong, nonatomic) IBOutlet UIView *mapInf;
-
-@property(nonatomic,strong) MKMapView *mapMundo;
 @property(nonatomic,strong) MKMapView *mapMonumento;
-@property (strong, nonatomic) IBOutlet UILabel *lblResult;
+@property(nonatomic,strong) MKMapView *mapMundo;
 
+
+@property (strong, nonatomic) IBOutlet UILabel *lblResult;
 @property (strong, nonatomic) IBOutlet UILabel *lblDistancia;
 @property (strong, nonatomic) IBOutlet UIButton *btnValida;
 @property (strong, nonatomic) IBOutlet UIButton *btnNext;
+
 - (IBAction)siguienteMonumento:(id)sender;
 - (IBAction)validarJuego:(id)sender;
 

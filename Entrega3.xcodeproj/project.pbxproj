@@ -15,6 +15,10 @@
 		4F68362A1E3222F000F7DB5F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F6836281E3222F000F7DB5F /* LaunchScreen.storyboard */; };
 		4F6836331E322AF400F7DB5F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F6836321E322AF400F7DB5F /* MapKit.framework */; };
 		4F6836361E322DD800F7DB5F /* Monumento.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6836351E322DD800F7DB5F /* Monumento.m */; };
+		4F68363B1E35314600F7DB5F /* applause-light-02.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4F6836381E35314600F7DB5F /* applause-light-02.wav */; };
+		4F68363C1E35314600F7DB5F /* applause-moderate-03.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4F6836391E35314600F7DB5F /* applause-moderate-03.wav */; };
+		4F68363D1E35314600F7DB5F /* boo-01.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4F68363A1E35314600F7DB5F /* boo-01.wav */; };
+		4F6836451E353D1D00F7DB5F /* SoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6836441E353D1D00F7DB5F /* SoundManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +35,11 @@
 		4F6836321E322AF400F7DB5F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4F6836341E322DD800F7DB5F /* Monumento.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Monumento.h; sourceTree = "<group>"; };
 		4F6836351E322DD800F7DB5F /* Monumento.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Monumento.m; sourceTree = "<group>"; };
+		4F6836381E35314600F7DB5F /* applause-light-02.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "applause-light-02.wav"; sourceTree = "<group>"; };
+		4F6836391E35314600F7DB5F /* applause-moderate-03.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "applause-moderate-03.wav"; sourceTree = "<group>"; };
+		4F68363A1E35314600F7DB5F /* boo-01.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "boo-01.wav"; sourceTree = "<group>"; };
+		4F6836431E353D1D00F7DB5F /* SoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
+		4F6836441E353D1D00F7DB5F /* SoundManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +57,7 @@
 		4F68360E1E3222F000F7DB5F = {
 			isa = PBXGroup;
 			children = (
+				4F6836371E35314600F7DB5F /* prac_03_sonidos */,
 				4F6836191E3222F000F7DB5F /* Entrega3 */,
 				4F6836181E3222F000F7DB5F /* Products */,
 				4F6836311E322AF400F7DB5F /* Frameworks */,
@@ -65,6 +75,7 @@
 		4F6836191E3222F000F7DB5F /* Entrega3 */ = {
 			isa = PBXGroup;
 			children = (
+				4F6836421E353D1D00F7DB5F /* SoundManager */,
 				4F68361D1E3222F000F7DB5F /* AppDelegate.h */,
 				4F68361E1E3222F000F7DB5F /* AppDelegate.m */,
 				4F6836201E3222F000F7DB5F /* ViewController.h */,
@@ -94,6 +105,25 @@
 				4F6836321E322AF400F7DB5F /* MapKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4F6836371E35314600F7DB5F /* prac_03_sonidos */ = {
+			isa = PBXGroup;
+			children = (
+				4F6836381E35314600F7DB5F /* applause-light-02.wav */,
+				4F6836391E35314600F7DB5F /* applause-moderate-03.wav */,
+				4F68363A1E35314600F7DB5F /* boo-01.wav */,
+			);
+			path = prac_03_sonidos;
+			sourceTree = "<group>";
+		};
+		4F6836421E353D1D00F7DB5F /* SoundManager */ = {
+			isa = PBXGroup;
+			children = (
+				4F6836431E353D1D00F7DB5F /* SoundManager.h */,
+				4F6836441E353D1D00F7DB5F /* SoundManager.m */,
+			);
+			path = SoundManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,6 +184,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F68363D1E35314600F7DB5F /* boo-01.wav in Resources */,
+				4F68363B1E35314600F7DB5F /* applause-light-02.wav in Resources */,
+				4F68363C1E35314600F7DB5F /* applause-moderate-03.wav in Resources */,
 				4F68362A1E3222F000F7DB5F /* LaunchScreen.storyboard in Resources */,
 				4F6836271E3222F000F7DB5F /* Assets.xcassets in Resources */,
 				4F6836251E3222F000F7DB5F /* Main.storyboard in Resources */,
@@ -170,6 +203,7 @@
 				4F6836361E322DD800F7DB5F /* Monumento.m in Sources */,
 				4F6836221E3222F000F7DB5F /* ViewController.m in Sources */,
 				4F68361F1E3222F000F7DB5F /* AppDelegate.m in Sources */,
+				4F6836451E353D1D00F7DB5F /* SoundManager.m in Sources */,
 				4F68361C1E3222F000F7DB5F /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,6 +361,7 @@
 				4F6836301E3222F000F7DB5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
