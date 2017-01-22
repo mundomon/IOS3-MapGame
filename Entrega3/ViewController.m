@@ -245,7 +245,7 @@
     monumento2.distancia = 200;
     monumento2.pitch = 25;
     monumento2.heading = 230;
-  /*
+  
     Monumento *monumento3 = [[Monumento alloc] init];
     monumento3.nombre = @"Empire State";
     monumento3.ciudad = @"NEW YORK";
@@ -361,9 +361,9 @@
     monumento15.lng = -58.3724665;
     monumento15.distancia = 500;
     monumento15.pitch = 45;
-    monumento15.heading = 75;*/
+    monumento15.heading = 75;
     
-    monumentos = [NSMutableArray arrayWithObjects:monumento1, monumento2, /*monumento3, monumento4, monumento5, monumento6, monumento7, monumento8, monumento9, monumento10, monumento11, monumento12, monumento13, monumento14, monumento15,*/ nil];
+    monumentos = [NSMutableArray arrayWithObjects:monumento1, monumento2, monumento3, monumento4, monumento5, monumento6, monumento7, monumento8, monumento9, monumento10, monumento11, monumento12, monumento13, monumento14, monumento15, nil];
 }
 
 @end
