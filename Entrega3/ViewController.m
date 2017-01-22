@@ -17,27 +17,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _anotacion= [[CLLocation alloc] init];
-    
     _mapMonumento = [[MKMapView alloc] initWithFrame:self.mapSup.bounds];
     _mapMundo = [[MKMapView alloc] initWithFrame:self.mapInf.bounds];
-    
-    
-    //configuro mundo
-    [_mapMundo setMapType:MKMapTypeStandard];
-    //[_mapMundo setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    [_mapMundo setZoomEnabled:NO];
-    [_mapMundo setDelegate:self];
- 
-    [self setRegion:CLLocationCoordinate2DMake(40,0) distancia:3000000 enMapa:_mapMundo];
-    
-    
-    [self.mapInf addSubview:_mapMundo];
-    
-    
-    [self initJuego];
 
-    
+    [self initJuego];
 }
 
 
@@ -48,35 +31,38 @@
 
 //IMPLEMENTANDO METODOS...
 
--(void) handleLongPress:(UILongPressGestureRecognizer*)paramGestureRecognizer{
-    CLLocationCoordinate2D puntoTocado;
+-(void) handleLongPressGesture:(UILongPressGestureRecognizer*)paramGestureRecognizer{
     CGPoint touchPoint = [paramGestureRecognizer locationInView:paramGestureRecognizer.view];
-    
-   
-    puntoTocado=[_mapMundo convertPoint:touchPoint toCoordinateFromView:_mapInf];
-    //NSLog(@"lat-long: %f - %f",(CGFloat)puntoTocado.latitude,(CGFloat)puntoTocado.longitude);
-    
-    [self mostrarAnotacion:puntoTocado title:@"" subtitle:@""];
-    
+    _coordenadaTouch=[_mapMundo convertPoint:touchPoint toCoordinateFromView:_mapInf];
+    touchSelected=YES;
+    [self mostrarAnotacion:_coordenadaTouch title:@"" subtitle:@""];
 }
 
 -(void)initJuego{
     distanciaAcumulada=0;
-    _lblDistancia.text=@"0";
+    _lblDistancia.text=@"0 Km";
     _lblDistancia.textColor=[UIColor redColor];
+    _lblResult.text=@"SELECCIONE UN PUNTO SOBRE EL MAPA";
+    touchSelected=NO;
+ 
+    //configuro mundo
+    [_mapMundo setDelegate:self];
+    [_mapMundo setMapType:MKMapTypeStandard];
+    [_mapMundo setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    [_mapMundo setZoomEnabled:NO];
     
+    [self setRegion:CLLocationCoordinate2DMake(40,0) distancia:3000000 enMapa:_mapMundo];
+    [self.mapInf addSubview:_mapMundo];
+
     [self initMonumentos];
     [self selectRandomMonumento];
     
     //GESTURE RECOGNIZER: LONG PRESS
-    longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
     [longPress setNumberOfTouchesRequired:1];
     [longPress setMinimumPressDuration:1];
     [longPress setAllowableMovement:100]; //solo lo puedo desplazar maximo 100 pixeles
     [self.mapInf addGestureRecognizer:longPress];
-
-    
-    
 }
 
 -(void)selectRandomMonumento{
@@ -90,13 +76,16 @@
 -(void) mostrarMonumento{
 
     //TODO reiniciar cuando acaben los monumenots
-    if(monumentos.count==0){
-        NSLog(@"Juego finalizado, volver a jugar?");
-       
+    if((int)monumentos.count==0){
+        NSLog(@"Monumentos restantes: %d",(int)monumentos.count);
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"FIN DE LA PARTIDA" message:@"Volver a Jugar?" delegate:self cancelButtonTitle:@"SI" otherButtonTitles:@"NO", nil];
+        [alert show];
     }else{
+        NSLog(@"Monumentos restantes: %d",(int)monumentos.count);
         CLLocationCoordinate2D monumentLocation = CLLocationCoordinate2DMake(monumento.lat, monumento.lng);
         MKMapCamera *camera = [MKMapCamera cameraLookingAtCenterCoordinate:monumentLocation fromDistance:monumento.distancia pitch:monumento.pitch heading:monumento.heading];
         
+        //PREPARO Y DIBUJO MONUMENTO
         [self setRegion:monumentLocation distancia:monumento.distancia enMapa:_mapMonumento];
         
         [_mapMonumento setMapType:MKMapTypeSatelliteFlyover];
@@ -109,33 +98,39 @@
         
         [self.mapSup addSubview: _mapMonumento];
         
-        [self setRegion:CLLocationCoordinate2DMake(40,0) distancia:3000000 enMapa:_mapMundo];
+        [self setRegion:CLLocationCoordinate2DMake(40,0) distancia:3500000 enMapa:_mapMundo];
     }
 }
 
 -(void)setRegion:(CLLocationCoordinate2D)centro distancia:(int)distancia enMapa:(MKMapView*)mapa{
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(centro, distancia, distancia);
-    [mapa setRegion:region animated:NO];
+    [mapa setRegion:region animated:YES];
+    [mapa regionThatFits:region];
 }
 
 -(IBAction)validarJuego:(id)sender{
-    CLLocation *locationMonumento = [[CLLocation alloc] initWithLatitude:monumento.lat longitude:monumento.lng];
+    CLLocation *clLocationMonumento = [[CLLocation alloc] initWithLatitude:monumento.lat longitude:monumento.lng];
+    CLLocation *clLocationTouch=[[CLLocation alloc] initWithLatitude:_coordenadaTouch.latitude longitude:_coordenadaTouch.longitude];
     CLLocationCoordinate2D monumentLocation = CLLocationCoordinate2DMake(monumento.lat, monumento.lng);
-    CLLocationCoordinate2D anotacionLocation = _anotacion.coordinate;
     
-    [self.mapInf removeGestureRecognizer:longPress];
-    
-    //llamar funcion distancia
-    int distanciaError=[self distancia:_anotacion hasta:locationMonumento];
-    [self setRegion:monumentLocation distancia:3000000 enMapa:_mapMundo];
-    
-    //llamada a mostrarAnotacion
-    NSString *ciudadDistancia=[NSString stringWithFormat:@"%@ (%dKm)",monumento.ciudad,distanciaError];
-    [self mostrarAnotacion:monumentLocation title:monumento.nombre subtitle:ciudadDistancia];
-    
-    //dibujar linea
-    [self dibujarLineaDesde:anotacionLocation hasta:monumentLocation];
-    
+    if(touchSelected){
+        [self.mapInf removeGestureRecognizer:longPress];
+        touchSelected=NO;
+        
+        //llamar funcion distancia
+        int distanciaError=[self distancia:clLocationTouch hasta:clLocationMonumento];
+        [self setRegion:monumentLocation distancia:3500000 enMapa:_mapMundo];
+        
+        //llamada a mostrarAnotacion
+        NSString *ciudadDistancia=[NSString stringWithFormat:@"%@ (%dKm)",monumento.ciudad,distanciaError];
+        [self mostrarAnotacion:monumentLocation title:monumento.nombre subtitle:ciudadDistancia];
+        //muestro datos en label
+        NSString *textResult=[NSString stringWithFormat:@"%@ \n %@",monumento.nombre,ciudadDistancia];
+        [_lblResult setText:textResult];
+        
+        //dibujar linea
+        [self dibujarLineaDesde:_coordenadaTouch hasta:monumentLocation];
+    }
 }
 
 -(IBAction)siguienteMonumento:(id)sender{
@@ -147,7 +142,7 @@
 -(int)distancia:(CLLocation*)desde hasta:(CLLocation*)hasta{
     CLLocationDistance kilometros = [hasta distanceFromLocation:desde]/1000;
     distanciaAcumulada+=kilometros;
-    NSString *escribeDistancia=[NSString stringWithFormat:@"%dKm",(int)distanciaAcumulada];
+    NSString *escribeDistancia=[NSString stringWithFormat:@"%d Km",(int)distanciaAcumulada];
      _lblDistancia.text=escribeDistancia;
     return kilometros;
 }
@@ -162,14 +157,24 @@
 }
 
 -(void)borrarAnotaciones{
+    // Esborro les anteriors
+    for (id annotation in _mapMundo.annotations) {
+        [_mapMundo removeAnnotation:annotation];
+    }
     [_mapMundo removeOverlays:_mapMundo.overlays];
     [_mapMundo removeAnnotations:_mapMundo.annotations];
 }
 
 -(void)mostrarAnotacion:(CLLocationCoordinate2D)coordenadas title:(NSString*)titulo subtitle:(NSString*)subtitulo{
     [self borrarAnotaciones];
-    CLLocation *anot = [[CLLocation alloc] initWithLatitude:coordenadas.latitude longitude:coordenadas.longitude];
-    [_mapMundo showAnnotations:@[anot] animated:NO];
+    
+    MKPointAnnotation *nota = [[MKPointAnnotation alloc] init];
+    [nota setCoordinate:coordenadas];
+    [nota setTitle:titulo];
+    [nota setSubtitle:subtitulo];
+    
+    // Posem el pin en el mapa
+    [_mapMundo addAnnotation:nota];
 }
 
 -(MKOverlayRenderer*) mapView:(MKMapView *)mapView rendererForOverlay:(nonnull id<MKOverlay>)overlay{
@@ -177,6 +182,18 @@
     [polyrenderer setStrokeColor:[UIColor redColor]];
     [polyrenderer setLineWidth:3];
     return polyrenderer;
+}
+
+//ALERTA
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex==0){
+        //NSLog(@"Has apretado OK");
+        [self initJuego];
+    }
+    if(buttonIndex==1){
+        [_lblResult setText:@"FIN DEL JUEGO"];
+        [self.mapInf removeGestureRecognizer:longPress];
+    }
 }
 
 -(void) initMonumentos {

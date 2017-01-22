@@ -10,21 +10,24 @@
 #import <MapKit/MapKit.h>
 #import "Monumento.h"
 
-@interface ViewController : UIViewController <MKMapViewDelegate>
+@interface ViewController : UIViewController <MKMapViewDelegate,UIAlertViewDelegate>
 {
     NSMutableArray *monumentos;
     Monumento *monumento;
     CGFloat distanciaAcumulada;
     UILongPressGestureRecognizer *longPress;
-    
-    
+    BOOL touchSelected;
 }
-@property(strong,nonatomic) CLLocation *anotacion;
+
+@property(readwrite,nonatomic) CLLocationCoordinate2D coordenadaTouch;
+
+
 @property (strong, nonatomic) IBOutlet UIView *mapSup;
 @property (strong, nonatomic) IBOutlet UIView *mapInf;
 
 @property(nonatomic,strong) MKMapView *mapMundo;
 @property(nonatomic,strong) MKMapView *mapMonumento;
+@property (strong, nonatomic) IBOutlet UILabel *lblResult;
 
 @property (strong, nonatomic) IBOutlet UILabel *lblDistancia;
 @property (strong, nonatomic) IBOutlet UIButton *btnValida;
