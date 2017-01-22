@@ -20,6 +20,21 @@
     // Do any additional setup after loading the view, typically from a nib.
     _mapMonumento = [[MKMapView alloc] initWithFrame:self.mapSup.bounds];
     _mapMundo = [[MKMapView alloc] initWithFrame:self.mapInf.bounds];
+    
+    //GESTURE RECOGNIZER: LONG PRESS
+    longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    [longPress setNumberOfTouchesRequired:1];
+    [longPress setMinimumPressDuration:1];
+    [longPress setAllowableMovement:100]; //solo lo puedo desplazar maximo 100 pixeles
+    [self.mapInf addGestureRecognizer:longPress];
+    
+    //SWIPE
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    
+    [swipe setDirection:UISwipeGestureRecognizerDirectionLeft];
+    [swipe setNumberOfTouchesRequired:1];
+    
+    [self.view addGestureRecognizer:swipe];
 
     [self initJuego];
 }
@@ -37,6 +52,22 @@
     _coordenadaTouch=[_mapMundo convertPoint:touchPoint toCoordinateFromView:_mapInf];
     touchSelected=YES;
     [self mostrarAnotacion:_coordenadaTouch title:@"" subtitle:@""];
+}
+
+-(void)handleSwipe:(UISwipeGestureRecognizer*)paramGestureRecognizer{
+    if(paramGestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft){
+        [self borrarAnotaciones];
+        if(OKPressed==NO){
+            [monumentos addObject:monumento];
+        }
+        [self selectRandomMonumento];
+        [self.mapInf addGestureRecognizer:longPress];
+        
+    }
+    else if(paramGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight){
+        NSLog(@"Swipe Right");
+    }
+    
 }
 
 -(void)initJuego{
@@ -58,13 +89,6 @@
 
     [self initMonumentos];
     [self selectRandomMonumento];
-    
-    //GESTURE RECOGNIZER: LONG PRESS
-    longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    [longPress setNumberOfTouchesRequired:1];
-    [longPress setMinimumPressDuration:1];
-    [longPress setAllowableMovement:100]; //solo lo puedo desplazar maximo 100 pixeles
-    [self.mapInf addGestureRecognizer:longPress];
 }
 
 -(void)selectRandomMonumento{
